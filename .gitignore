@@ -1,0 +1,18 @@
+# Backend
+backend/__pycache__/
+backend/.env
+backend/*.pyc
+
+# Frontend
+frontend/.angular/
+frontend/dist/
+frontend/node_modules/
+frontend/.env
+frontend/.husky/
+
+# General
+*.log
+.vscode/
+.idea/
+docker-compose.override.yaml
+
