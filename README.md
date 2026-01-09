@@ -2,7 +2,7 @@
 
 A fully dockerized implementation of the RealWorld / Conduit application using Django (REST Framework) for the backend and Angular for the frontend. The project follows a modular architecture and is designed to be deployed easily using Docker and Docker Compose.
 
-# Table of Contents
+## Table of Contents
 
 1. [Features](#1-features)
 2. [Prerequisites](#2-prerequisites)
@@ -15,22 +15,22 @@ A fully dockerized implementation of the RealWorld / Conduit application using D
 9. [License](#9-license)
 ---
 
-# Instructure
 
-# 1. Features
+## 1. Features
 
 - Dockerized backend (Django + Django REST Framework)
 - Dockerized frontend (Angular + Nginx)
-- PostgreSQL database
+- PostgreSQL database inside a container
 - JWT-based authentication
 - RealWorld API specification compliant
 - Modular backend architecture (authentication, articles, profiles, core)
 - Production-ready WSGI server (Gunicorn)
+- Entrypoint script ensures proper container startup order
 ---
 
-# 2. Prerequisites
+## 2. Prerequisites
 
-Make sure the following tools are installed on your system:
+Ensure the following tools are installed:
 
 - [Docker](https://docs.docker.com/get-docker/)
 - Docker-Compose (>= 2.x)
@@ -39,7 +39,7 @@ Make sure the following tools are installed on your system:
 No local Python, Node.js, or database installation is required.
 ---
 
-# 3. Installation
+## 3. Installation
 
 - Clone the repository:
 
@@ -47,6 +47,17 @@ No local Python, Node.js, or database installation is required.
 git clone git@github.com:behrouzRajaei/conduit-container.git
 cd conduit-container
 ```
+
+- Environment Variables
+
+Before starting the project, Create a .env from the example file:
+
+```bash
+cp .env.example .env
+```
+
+Adjust the values inside .env according to your environment.
+
 - Build and start all services:
 
 ```bash
@@ -61,15 +72,16 @@ docker-compose ps
 ```
 ---
 
-# 4. Usage
+## 4. Usage
 
-## Frontend
+### Frontend
 
 The Angular frontend is available at:
 
 ```
-http://localhost:8282
+http://<SERVER_IP>:8282
 ```
+
 You can:
 
 - Register a new user
@@ -77,18 +89,18 @@ You can:
 - View, create, and favorite articles
 - Follow user profiles
 
-## Backend API
+### Backend API
 
 The Django REST API is available at:
 
 ```
-http://localhost:8000/api/
+http://<SERVER_IP>:8000/api/
 ```
 
 Example test request:
 
 ```
-curl http://localhost:8000/api/
+curl http://<SERVER_IP>:8000/api/
 ```
 
 Logs can be inspected using:
@@ -104,32 +116,44 @@ docker logs conduit-backend > backend-logs.txt
 ```
 ---
 
-# 5. Security & Secrets
+## 5. Security & Secrets
 
 - No passwords, tokens, or credentials are hardcoded
 - All sensitive configuration is injected via environment variables
 - .env files are excluded from version control
 - No SSH keys or IP addresses are stored in the repository
+- Do not expose database ports externally
 ---
 
-# 6. Entrypoint Script
+## 6. Entrypoint Script
 
-The backend container uses Gunicorn as a production-ready WSGI server.
-
+The backend container uses an entrypoint script (entrypoint.sh) to ensure proper startup:
 Entrypoint command:
 
 ```
-gunicorn --bind 0.0.0.0:8000 wsgi:application
+#!/bin/sh
+set -e
+
+# Run migrations
+python manage.py migrate --noinput
+
+# Start Gunicorn
+gunicorn wsgi:application --bind 0.0.0.0:8000
 ```
 
 This ensures:
 
-- No Django development server is used
+- Correct container startup order
+- No Django dev server in production
 - Proper handling of concurrent requests
-- Compliance with production deployment requirements
+
+Nginx handles the Angular frontend with:
+
+- /api/ requests proxied to backend
+- All other requests served from frontend build
 ---
 
-# 7. API Endpoints
+## 7. API Endpoints
 
 ### Authentication
 
@@ -148,10 +172,11 @@ This ensures:
 
 - GET /api/profiles/{username}
 - POST /api/profiles/{username}/follow
-- All responses follow the RealWorld API specification.
+
+All responses follow the RealWorld API specification.
 ---
 
-# 8. Contributing
+## 8. Contributing
 
 Contributions are welcome.
 
@@ -163,12 +188,11 @@ Steps:
 4. Push the branch
 5. Open a Pull Request
 
-Please follow existing code style and conventions.
+Follow existing code style and conventions.
 ---
 
-# 9. License
+## 9. License
 
 This project is licensed under the MIT License.
 
-See the LICENSE file for details.
 ---

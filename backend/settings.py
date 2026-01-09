@@ -1,25 +1,14 @@
 import os
-# from pathlib import Path
 
-#BASE_DIR = Path(__file__).resolve().parent.parent
+# Base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "n7@t$z&l8^5#c0u%1v!b!f7x*2e@p$w9)g+q7d^r)l3@1e%2k"
-)
+# Security
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "replace_this_with_env_value")
+DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
-#DEBUG = os.environ.get("DJANGO_DEBUG", "False") == "True"
-
-#ALLOWED_HOSTS = os.environ.get(
-#    "DJANGO_ALLOWED_HOSTS",
-#    "localhost,127.0.0.1"
-#).split(",")
-
-DEBUG = True
-ALLOWED_HOSTS = ['*']
-
-
+# Installed apps
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -28,27 +17,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    'conduit.apps.articles',
-    'conduit.apps.authentication',
-    'conduit.apps.profiles',
-    'conduit.apps.core',
+    "conduit.apps.articles",
+    "conduit.apps.authentication",
+    "conduit.apps.profiles",
+    "conduit.apps.core",
+    "corsheaders",
 ]
 
-#INSTALLED_APPS += [
-#    'corsheaders',
-#]
-#
-#MIDDLEWARE = [
-#    'corsheaders.middleware.CorsMiddleware',
-#] + MIDDLEWARE
-#
-#CORS_ALLOWED_ORIGINS = [
-#    'http://localhost:8282',
-#    'http://188.245.220.182:8282',
-#]
-
-
+# Middleware
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -58,8 +36,17 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "urls"
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8282",
+    "http://188.245.220.182:8282",
+]
 
+# URLs & WSGI
+ROOT_URLCONF = "urls"
+WSGI_APPLICATION = "wsgi.application"
+
+# Templates
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -76,8 +63,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "wsgi.application"
-
+# Database
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -89,6 +75,7 @@ DATABASES = {
     }
 }
 
+# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -96,12 +83,14 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
+# Localization
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# Static files
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 

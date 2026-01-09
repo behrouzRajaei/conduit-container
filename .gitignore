@@ -1,18 +1,50 @@
-# Backend
-backend/__pycache__/
-backend/.env
-backend/*.pyc
-
-# Frontend
-frontend/.angular/
-frontend/dist/
-frontend/node_modules/
-frontend/.env
-frontend/.husky/
-
-# General
+# =====================
+# Global
+# =====================
 *.log
+*.pid
+*.swp
+.DS_Store
+
+# =====================
+# Environment files
+# =====================
+.env
+.env.*
+!.env.example
+
+# =====================
+# Docker
+# =====================
+docker-compose.override.yml
+
+# =====================
+# Python / Django
+# =====================
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.egg-info/
+venv/
+.envrc
+
+# =====================
+# Node / Angular
+# =====================
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log*
+
+# =====================
+# IDEs / Editors
+# =====================
 .vscode/
 .idea/
-docker-compose.override.yaml
+
+# =====================
+# OS
+# =====================
+Thumbs.db
 
