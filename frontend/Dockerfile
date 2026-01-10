@@ -8,6 +8,10 @@ RUN npm install
 
 # Copy source and build
 COPY . .
+
+ARG API_URL
+RUN sed -i "s|__API_URL__|${API_URL}|g" src/environments/environment.prod.ts
+
 RUN npm run build
 
 # ---------- Runtime Stage ----------

@@ -1,19 +1,24 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import {
   HttpEvent,
   HttpInterceptor,
   HttpHandler,
-  HttpRequest,
-} from "@angular/common/http";
-import { Observable } from "rxjs";
+  HttpRequest
+} from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class ApiInterceptor implements HttpInterceptor {
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+
+    if (req.url.startsWith('http')) {
+      return next.handle(req);
+    }
+
     const apiReq = req.clone({
       url: `${environment.apiUrl}${req.url}`
     });
