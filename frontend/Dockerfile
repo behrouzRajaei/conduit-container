@@ -2,29 +2,23 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy source and build
 COPY . .
 
 ARG API_URL
 RUN sed -i "s|__API_URL__|${API_URL}|g" src/environments/environment.prod.ts
 
-RUN npm run build
+# Build using production environment
+RUN npm run build -- --configuration production
 
 # ---------- Runtime Stage ----------
 FROM nginx:alpine
 
-# Copy nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy built Angular app
 COPY --from=builder /app/dist/angular-conduit /usr/share/nginx/html
 
-# Expose port
 EXPOSE 80
-
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
