@@ -3,7 +3,7 @@ FROM python:3.7-alpine AS builder
 
 WORKDIR /app
 
-RUN apk add --no-cache gcc musl-dev postgresql-dev
+RUN apk add --no-cache gcc g++ musl-dev postgresql-dev libffi-dev
 
 COPY requirements.txt .
 RUN pip install --user --upgrade pip && pip install --user -r requirements.txt

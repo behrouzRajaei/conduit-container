@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Observable, BehaviorSubject } from "rxjs";
-
 import { JwtService } from "./jwt.service";
 import { map, distinctUntilChanged, tap, shareReplay } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
@@ -22,13 +21,10 @@ export class UserService {
     private readonly router: Router
   ) {}
 
-  login(credentials: {
-    email: string;
-    password: string;
-  }): Observable<{ user: User }> {
-    return this.http
-      .post<{ user: User }>("/users/login", { user: credentials })
-      .pipe(tap(({ user }) => this.setAuth(user)));
+  login(credentials: { email: string; password: string }) {
+  return this.http
+    .post<{ user: User }>("/users/login/", { user: credentials })
+    .pipe(tap((user) => this.setAuth(user)));
   }
 
   register(credentials: {
@@ -37,7 +33,7 @@ export class UserService {
     password: string;
   }): Observable<{ user: User }> {
     return this.http
-      .post<{ user: User }>("/users", { user: credentials })
+      .post<{ user: User }>("/users/", { user: credentials })
       .pipe(tap(({ user }) => this.setAuth(user)));
   }
 
@@ -47,7 +43,7 @@ export class UserService {
   }
 
   getCurrentUser(): Observable<{ user: User }> {
-    return this.http.get<{ user: User }>("/user").pipe(
+    return this.http.get<{ user: User }>("/user/").pipe(
       tap({
         next: ({ user }) => this.setAuth(user),
         error: () => this.purgeAuth(),
@@ -57,7 +53,7 @@ export class UserService {
   }
 
   update(user: Partial<User>): Observable<{ user: User }> {
-    return this.http.put<{ user: User }>("/user", { user }).pipe(
+    return this.http.put<{ user: User }>("/user/", { user }).pipe(
       tap(({ user }) => {
         this.currentUserSubject.next(user);
       })
