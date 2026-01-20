@@ -52,13 +52,14 @@ export default class AuthComponent implements OnInit {
   ngOnInit(): void {
     this.authType = this.route.snapshot.url.at(-1)!.path;
     this.title = this.authType === "login" ? "Sign in" : "Sign up";
+
     if (this.authType === "register") {
       this.authForm.addControl(
         "username",
         new FormControl("", {
           validators: [Validators.required],
           nonNullable: true,
-        }),
+        })
       );
     }
   }
@@ -67,28 +68,30 @@ export default class AuthComponent implements OnInit {
     this.isSubmitting = true;
     this.errors = { errors: {} };
 
-    let observable =
+    const observable =
       this.authType === "login"
         ? this.userService.login(
-            this.authForm.value as { email: string; password: string },
+            this.authForm.value as { email: string; password: string }
           )
         : this.userService.register(
             this.authForm.value as {
               email: string;
               password: string;
               username: string;
-            },
+            }
           );
 
-    observable.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        console.log(res);
-        void this.router.navigate(["/"]),
-        }
-      error: (err) => {
-        this.errors = err;
-        this.isSubmitting = false;
-      },
-    });
+    observable
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.isSubmitting = false;
+          void this.router.navigate(["/"]);
+        },
+        error: (err) => {
+          this.isSubmitting = false;
+          this.errors = err;
+        },
+      });
   }
 }

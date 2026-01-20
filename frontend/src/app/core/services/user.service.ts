@@ -5,6 +5,7 @@ import { map, distinctUntilChanged, tap, shareReplay } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { User } from "../models/user.model";
 import { Router } from "@angular/router";
+import { environment } from "../../../environments/environment";
 
 @Injectable({ providedIn: "root" })
 export class UserService {
@@ -22,9 +23,12 @@ export class UserService {
   ) {}
 
   login(credentials: { email: string; password: string }) {
-  return this.http
-    .post<{ user: User }>("/users/login/", { user: credentials })
-    .pipe(tap((user) => this.setAuth(user)));
+    return this.http
+      .post<{ user: User }>(
+        `${environment.apiUrl}/users/login/`,
+        { user: credentials }
+      )
+      .pipe(tap(({ user }) => this.setAuth(user)));
   }
 
   register(credentials: {
@@ -33,7 +37,10 @@ export class UserService {
     password: string;
   }): Observable<{ user: User }> {
     return this.http
-      .post<{ user: User }>("/users/", { user: credentials })
+      .post<{ user: User }>(
+        `${environment.apiUrl}/users/`,
+        { user: credentials }
+      )
       .pipe(tap(({ user }) => this.setAuth(user)));
   }
 
@@ -43,7 +50,7 @@ export class UserService {
   }
 
   getCurrentUser(): Observable<{ user: User }> {
-    return this.http.get<{ user: User }>("/user/").pipe(
+    return this.http.get<{ user: User }>(`${environment.apiUrl}/user/`).pipe(
       tap({
         next: ({ user }) => this.setAuth(user),
         error: () => this.purgeAuth(),
@@ -53,7 +60,7 @@ export class UserService {
   }
 
   update(user: Partial<User>): Observable<{ user: User }> {
-    return this.http.put<{ user: User }>("/user/", { user }).pipe(
+    return this.http.put<{ user: User }>(`${environment.apiUrl}/user/`, { user }).pipe(
       tap(({ user }) => {
         this.currentUserSubject.next(user);
       })

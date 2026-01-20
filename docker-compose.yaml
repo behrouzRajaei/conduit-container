@@ -15,8 +15,6 @@ services:
     build: ./backend
     container_name: conduit-backend
     command: ["sh", "/app/entrypoint.sh"]
-    volumes:
-      - ./backend:/app
     ports:
       - "8000:8000"
     depends_on:
