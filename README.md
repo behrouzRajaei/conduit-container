@@ -1,6 +1,7 @@
 # Conduit – Dockerized RealWorld Application
 
-A fully dockerized implementation of the RealWorld / Conduit application using Django (REST Framework) for the backend and Angular for the frontend. The project follows a modular architecture and is designed to be deployed easily using Docker and Docker Compose.
+A fully dockerized implementation of the RealWorld / Conduit application using Django (REST Framework) for the backend and Angular for the frontend. The project follows a modular architecture and is designed to be deployed easily using Docker, Docker Compose, and automatic GitHub Actions deployment.
+---
 
 ## Table of Contents
 
@@ -12,9 +13,9 @@ A fully dockerized implementation of the RealWorld / Conduit application using D
 6. [Entrypoint Script](#6-entrypoint-script)
 7. [API Endpoints](#7-api-endpoints)
 8. [Contributing](#8-contributing)
-9. [License](#9-license)
+9. [Automatic Deployment](#9-Automatic-Deployment)
+10. [License](#10-license)
 ---
-
 
 ## 1. Features
 
@@ -190,8 +191,21 @@ Steps:
 
 Follow existing code style and conventions.
 ---
+## 9. Automatic Deployment
 
-## 9. License
+This project uses a GitHub Action to automatically deploy the Conduit containers whenever changes are pushed to the `main` branch.
+
+- Workflow file: `.github/workflows/deploy.yml`
+- Steps performed:
+  1. Checkout repository
+  2. Set up Docker
+  3. Build and run Docker Compose
+
+### How to trigger
+Push any changes to the `main` branch, and the workflow will automatically build and start the containers using the `docker-compose.yml` configuration.
+---
+
+## 10. License
 
 This project is licensed under the MIT License.
 
