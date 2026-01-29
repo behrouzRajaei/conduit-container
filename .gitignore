@@ -1,0 +1,50 @@
+# =====================
+# Global
+# =====================
+*.log
+*.pid
+*.swp
+.DS_Store
+
+# =====================
+# Environment files
+# =====================
+.env
+.env.*
+!.env.example
+
+# =====================
+# Docker
+# =====================
+docker-compose.override.yml
+
+# =====================
+# Python / Django
+# =====================
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.egg-info/
+venv/
+.envrc
+
+# =====================
+# Node / Angular
+# =====================
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log*
+
+# =====================
+# IDEs / Editors
+# =====================
+.vscode/
+.idea/
+
+# =====================
+# OS
+# =====================
+Thumbs.db
+
