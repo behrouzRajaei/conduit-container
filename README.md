@@ -193,16 +193,14 @@ Follow existing code style and conventions.
 ---
 ## 9. Automatic Deployment
 
-This project uses a GitHub Action to automatically deploy the Conduit containers whenever changes are pushed to the `main` branch.
+This project includes a GitHub Actions workflow (.github/workflows/deploy.yml) that automates deployment:
+1. *Build images*: Frontend and Backend containers are built in the GitHub Runner.
+2. *Push to registry*: Built images are pushed to a container registry (e.g., GHCR).
+3. *Deploy on VM*: Only docker-compose.yml (and optionally .env) is needed on the virtual machine.
+4. *Start latest image*: The workflow ensures that the latest image is pulled and running.
+5. *Clean up*: Previous containers are removed automatically to prevent conflicts.
 
-- Workflow file: `.github/workflows/deploy.yml`
-- Steps performed:
-  1. Checkout repository
-  2. Set up Docker
-  3. Build and run Docker Compose
-
-### How to trigger
-Push any changes to the `main` branch, and the workflow will automatically build and start the containers using the `docker-compose.yml` configuration.
+Only the necessary files for deployment are used, keeping the process clean and reproducible.
 ---
 
 ## 10. License
