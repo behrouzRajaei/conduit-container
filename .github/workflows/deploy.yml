@@ -31,8 +31,8 @@ jobs:
           context: ./backend
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner.toLower() }}/conduit-backend:latest
-            ghcr.io/${{ github.repository_owner.toLower() }}/conduit-backend:${{ github.sha }}
+            ghcr.io/behrouzrajaei/conduit-backend:latest
+            ghcr.io/behrouzrajaei/conduit-backend:${{ github.sha }}
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
@@ -40,5 +40,5 @@ jobs:
           context: ./frontend
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner.toLower() }}/conduit-frontend:latest
-            ghcr.io/${{ github.repository_owner.toLower() }}/conduit-frontend:${{ github.sha }}
+            ghcr.io/behrouzrajaei/conduit-frontend:latest
+            ghcr.io/behrouzrajaei/conduit-frontend:${{ github.sha }}
