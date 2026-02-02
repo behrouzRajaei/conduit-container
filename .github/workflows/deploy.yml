@@ -20,7 +20,7 @@ jobs:
       - name: Set version
         run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-      # Log in to GHCR
+      # Log in to GitHub Container Registry
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -28,23 +28,25 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build & push backend image
+      # Build & push backend image with SHA
       - name: Build and push backend image
         run: |
           docker build -t ghcr.io/behrouzrajaei/conduit-backend:${{ env.VERSION }} ./backend
           docker push ghcr.io/behrouzrajaei/conduit-backend:${{ env.VERSION }}
+          # Optional: tag latest for local/dev testing
           docker tag ghcr.io/behrouzrajaei/conduit-backend:${{ env.VERSION }} ghcr.io/behrouzrajaei/conduit-backend:latest
           docker push ghcr.io/behrouzrajaei/conduit-backend:latest
 
-      # Build & push frontend image
+      # Build & push frontend image with SHA
       - name: Build and push frontend image
         run: |
           docker build -t ghcr.io/behrouzrajaei/conduit-frontend:${{ env.VERSION }} ./frontend
           docker push ghcr.io/behrouzrajaei/conduit-frontend:${{ env.VERSION }}
+          # Optional: tag latest for local/dev testing
           docker tag ghcr.io/behrouzrajaei/conduit-frontend:${{ env.VERSION }} ghcr.io/behrouzrajaei/conduit-frontend:latest
           docker push ghcr.io/behrouzrajaei/conduit-frontend:latest
 
-      # Create .env with version
+      # Create .env file with SHA commit version
       - name: Create .env file
         run: |
           cat <<EOF > .env
@@ -83,7 +85,8 @@ jobs:
           port: 22
           script: |
             cd /home/${{ secrets.SSH_USER }}/conduit_container
+            # Force recreate containers to ensure SHA commit is used
             docker compose pull
             docker compose down
-            docker compose up -d
+            docker compose up -d --force-recreate
             docker image prune -f
