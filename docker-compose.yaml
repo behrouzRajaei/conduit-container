@@ -1,35 +1,35 @@
+version: "3.9"
+
 services:
+  backend:
+    image: ghcr.io/behrouzrajaei/conduit-backend:${VERSION}
+    container_name: conduit-backend
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
   frontend:
-    build:
-      context: ./frontend
-      args:
-        API_URL: ${FRONTEND_API_URL}
+    image: ghcr.io/behrouzrajaei/conduit-frontend:${VERSION}
     container_name: conduit-frontend
-    restart: unless-stopped
+    env_file:
+      - .env
     ports:
       - "8282:80"
     depends_on:
       - backend
 
-  backend:
-    build: ./backend
-    container_name: conduit-backend
-    command: ["sh", "/app/entrypoint.sh"]
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    env_file:
-      - .env
-
   db:
     image: postgres:9.6
     container_name: conduit-db
-    restart: unless-stopped
     env_file:
       - .env
     volumes:
-      - conduit_postgres_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
 volumes:
-  conduit_postgres_data:
+  db_data:
